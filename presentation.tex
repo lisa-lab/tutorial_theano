@@ -622,10 +622,10 @@ Traceback (most recent call last):
 >>> from theano.printing import debugprint
 >>> debugprint(a)
 Elemwise{mul,no_inplace} [@A] ''
-|TensorConstant{2.0} [@B]
-|Elemwise{add,no_inplace} [@C] 'z'
-|<TensorType(float64, scalar)> [@D]
-|<TensorType(float64, scalar)> [@E]
+ |TensorConstant{2.0} [@B]
+ |Elemwise{add,no_inplace} [@C] 'z'
+   |<TensorType(float64, scalar)> [@D]
+   |<TensorType(float64, scalar)> [@E]
 \end{lstlisting}
 \end{frame}
 
@@ -685,7 +685,7 @@ ValueError: Input dimension mis-match.
 >>> f = function([x], y)
 >>> debugprint(f.maker.fgraph.outputs[0])
 DeepCopyOp [@A] ''
-|TensorConstant{1.0} [@B]
+ |TensorConstant{1.0} [@B]
 \end{lstlisting}
 \end{frame}
 
