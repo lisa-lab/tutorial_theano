@@ -1,4 +1,4 @@
-\documentclass[utf8x]{beamer}
+\documentclass[utf8x,hyperref={pdfpagelabels=false}]{beamer}
 
 \usepackage[utf8x]{inputenc}
 \usepackage[OT1]{fontenc}
@@ -15,7 +15,7 @@
 \setbeamertemplate{footline}[page number]
 \setbeamertemplate{navigation symbols}{}
 
-\lstloadlanguages{Python,C,sh}
+\lstloadlanguages{Python}
 
 \definecolor{darkgreen}{RGB}{0,93,21}
 \definecolor{greenblue}{RGB}{40,110,126}
@@ -37,7 +37,7 @@ Arnaud Bergeron \newline
 }
 \date{February 26, 2015}
 
-\lstset{
+\lstdefinestyle{theano}{
 language=Python,
 basicstyle=\fontfamily{pcr}\selectfont\footnotesize,
 keywordstyle=\color{darkgreen}\bfseries,
@@ -52,6 +52,19 @@ emph={[2]__init__,make_node,perform,infer_shape,c_code,make_thunk,grad,R_op},emp
 emph={[3]self},emphstyle={[3]\color{darkgreen}},
 moredelim=**[is][{\color{red}}]{`}{`}
 }
+
+% We don't have code till the end of the file.
+\lstdefinestyle{output}{
+language={},
+basicstyle=\ttfamily\footnotesize,
+backgroundcolor=\color{white},
+frame={},
+breaklines=true,
+emph={[2]},
+emph={[3]},
+}
+
+\lstset{style=theano}
 
 \newcommand{\code}[1]{\lstinline[emph={[2]}]|#1|}
 
@@ -102,13 +115,13 @@ moredelim=**[is][{\color{red}}]{`}{`}
   Using Theano:
   \begin{itemize}
   \item define expression $f(x,y) = x + y$
+\begin{lstlisting}
+>>> z = x + y
+\end{lstlisting}
   \item compile expression
 \begin{lstlisting}
-int f(int x, int y){
-  return x + y;
-}
+>>> f = theano.function([x, y], z)
 \end{lstlisting}
-
   \item execute expression
 \begin{lstlisting}
 >>> f(1, 2)
@@ -117,8 +130,8 @@ int f(int x, int y){
   \end{itemize}
 \end{frame}
 
-
 \section{Building}
+
 \begin{frame}{Building expressions}
   \begin{itemize}
   \item Scalars
@@ -131,11 +144,6 @@ int f(int x, int y){
 \end{frame}
 
 \begin{frame}[fragile]{Scalar math}
-  Using Theano:
-  \begin{itemize}
-  \item define expression $f(x,y) = x + y$
-  \item compile expression
-  \end{itemize}
 \begin{lstlisting}
 from theano import tensor as T
 x = T.scalar()
@@ -177,17 +185,12 @@ c = T.dot(x, a)
 \end{frame}
 
 \begin{frame}[fragile]{Tensors}
-  Using Theano:
-  \begin{itemize}
-  \item define expression $f(x,y) = x + y$
-  \item compile expression
-    \begin{itemize}
+   \begin{itemize}
     \item Dimensionality defined by length of ``broadcastable'' argument
     \item Can add (or do other elemwise op) on two
       tensors with same dimensionality
     \item Duplicate tensors along broadcastable axes to
       make size match
-    \end{itemize}
   \end{itemize}
 \begin{lstlisting}
 from theano import tensor as T
@@ -199,11 +202,6 @@ x = tensor3()
 \end{frame}
 
 \begin{frame}[fragile]{Reductions}
-  Using Theano:
-  \begin{itemize}
-  \item define expression $f(x,y) = x + y$
-  \item compile expression
-  \end{itemize}
 \begin{lstlisting}
 from theano import tensor as T
 tensor3 = T.TensorType(
@@ -217,10 +215,11 @@ mx = x.max(axis=1)
 \end{frame}
 
 \begin{frame}[fragile]{Dimshuffle}
-
 \begin{lstlisting}
 from theano import tensor as T
-tensor3 = T.TensorType(broadcastable=(False, False, False), dtype=''float32'')
+tensor3 = T.TensorType(
+    broadcastable=(False, False, False),
+    dtype='float32')
 x = tensor3()
 y = x.dimshuffle((2, 1, 0))
 a = T.matrix()
@@ -228,20 +227,19 @@ b = a.T
 # Same as b
 c = a.dimshuffle((0, 1))
 # Adding to larger tensor
-d = a.dimshuffle((0, 1, ``x''))
+d = a.dimshuffle((0, 1, 'x'))
 e = a + d
 \end{lstlisting}
 \end{frame}
 
 \begin{frame}{Exercices}
-  Work through the ``01\_buildbing\_expressions'' directory now.
-  Available at ``git~clone~https://github.com/nouiz/ccw\_tutorial\_theano.git''.
+Work through the "Building Expressions" section of the ipython notebook.
 \end{frame}
 
 \section{Compiling/Running}
 \begin{frame}{Compiling and running expression}
   \begin{itemize}
-  \item theano.function
+  \item \code{theano.function}
   \item shared variables and updates
   \item compilation modes
   \item compilation for GPU
@@ -249,18 +247,18 @@ e = a + d
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{theano.function}
+\begin{frame}[fragile]{\code{theano.function}}
 
 \begin{lstlisting}
 >>> from theano import tensor as T
 >>> x = T.scalar()
 >>> y = T.scalar()
 >>> from theano import function
->>> # first arg is list of SYMBOLIC inputs
->>> # second arg is SYMBOLIC output
+>>> # first arg is list of symbolic inputs
+>>> # second arg is symbolic output
 >>> f = function([x, y], x + y)
->>> # Call it with NUMERICAL values
->>> # Get a NUMERICAL output
+>>> # Call it with numerical values
+>>> # Get a numerical output
 >>> f(1., 2.)
 array(3.0)
 \end{lstlisting}
@@ -269,28 +267,26 @@ array(3.0)
 \begin{frame}{Shared variables}
   \begin{itemize}
   \item It’s hard to do much with purely functional programming
-  \item ``shared variables'' add just a little bit of imperative programming
-  \item A “shared variable” is a buffer that stores a numerical value for a Theano variable
+  \item \emph{shared variables} add just a little bit of imperative programming
+  \item A \emph{shared variable} is a buffer that stores a numerical value for a Theano variable
   \item Can write to as many shared variables as you want, once each, at the end of the function
-  \item  Modify outside Theano function with get\_value() and set\_value() methods.
+  \item  Modify outside Theano function with \code{get_value()} and \code{set_value()} methods.
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Shared variable example}
-
 \begin{lstlisting}
 >>> from theano import shared
 >>> x = shared(0.)
->>> from theano.compat.python2x import OrderedDict
->>> updates = OrderedDict()
->>> updates[x] = x + 1
+# Can also use a dict for more complex code
+>>> updates = [(x,  x + 1)]
 >>> f = function([], updates=updates)
 >>> f()
->>> x.get\_value()
+>>> x.get_value()
 1.0
->>> x.set\_value(100.)
+>>> x.set_value(100.)
 >>> f()
->>> x.get\_value()
+>>> x.get_value()
 101.0
 \end{lstlisting}
 \end{frame}
@@ -300,15 +296,11 @@ array(3.0)
   \item Use theano.compat.python2x.OrderedDict
   \item Not collections.OrderedDict
   \begin{itemize}
-  \item This isn’t available in older versions of python,
-and will limit the portability of your code
+  \item This isn’t available in older versions of python, and will limit the portability of your code.
   \end{itemize}
-  \item Not \{\} aka dict
+  \item Not \code{\{\}} aka dict
   \begin{itemize}
-  \item The iteration order of this built-in class is not
-    deterministic (thanks, Python!) so if Theano
-    accepted this, the same script could compile
-    different C programs each time you run it
+  \item The iteration order of this built-in class is not deterministic so if Theano accepted this, the same script could compile different C programs each time you run it.
   \end{itemize}
   \end{itemize}
 \end{frame}
@@ -316,33 +308,32 @@ and will limit the portability of your code
 \begin{frame}{Compilation modes}
   \begin{itemize}
   \item Can compile in different modes to get different kinds of programs
-  \item Can specify these modes very precisely with arguments to theano.function
+  \item Can specify these modes very precisely with arguments to \code{theano.function()}
   \item Can use a few quick presets with environment variable flags
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Example preset compilation modes}
-  \begin{itemize}
-  \item FAST\_RUN: default. Spends a lot of time on
+  \begin{description}[FAST\_RUN]
+  \item[FAST\_RUN] Default. Spends a lot of time on
 compilation to get an executable that runs
 fast.
-  \item FAST\_COMPILE: Doesn’t spend much time
-compiling. Executable usually uses python
+  \item[FAST\_COMPILE] Doesn’t spend much time compiling.
+Executable usually uses python
 instead of compiled C code. Runs slow.
-  \item DEBUG\_MODE: Adds lots of checks.
-Raises error messages in situations other
-modes regard as fine.
-  \end{itemize}
+  \item[DEBUG\_MODE] Adds lots of checks.
+Raises error messages in situations other modes don't check for.
+  \end{description}
 \end{frame}
 
 \begin{frame}{Compilation for GPU}
   \begin{itemize}
-  \item Theano current back-end only supports 32 bit on GPU
+  \item Theano's current back-end only supports 32 bit on GPU
   \item CUDA supports 64 bit, but is slow in gamer card
-  \item T.fscalar, T.fvector, T.fmatrix are all 32 bit
-  \item T.scalar, T.vector, T.matrix resolve to 32 bit or 64 bit depending on theano’s floatX flag
+  \item \code{T.fscalar}, \code{T.fvector}, \code{T.fmatrix} are all 32 bit
+  \item \code{T.scalar}, \code{T.vector}, \code{T.matrix} resolve to 32 or 64 bit depending on theano’s floatX flag
   \item floatX is float64 by default, set it to float32
-  \item Set device flag to gpu (or a specific gpu, like gpu0)
+  \item Set the device flag to gpu (or a specific gpu, like gpu0)
   \end{itemize}
 \end{frame}
 
@@ -352,39 +343,33 @@ modes regard as fine.
     you write before converting them to C code
   \item It makes them faster
   \begin{itemize}
-  \item (x+y)+(x+y) -> 2 (x + y)
+  \item $(x+y)+(x+y) \to 2\times(x + y)$
   \end{itemize}
   \item It makes them more stable
   \begin{itemize}
-  \item exp(a)/exp(a).sum()->softmax(a)
+  \item $\exp(a)/\sum{\exp(a)} \to \operatorname{softmax}(a)$
   \end{itemize}
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Optimizations}
-
-  \begin{itemize}
-  \item Sometimes optimizations discard error
-    checking and produce incorrect output
-    rather than an exception
-  \end{itemize}
+\begin{frame}[fragile]{Optimizations (2)}
+Sometimes optimizations discard error checking and produce incorrect output rather than an exception.
 \begin{lstlisting}
 >>> x = T.scalar()
 >>> f = function([x], x/x)
 >>> f(0.)
 array(1.0)
 \end{lstlisting}
-
 \end{frame}
 
 \begin{frame}{Exercises}
-Work through the ``02\_compiling\_and\_running'' directory now
+Work through the "Compiling and Running" section of the ipython notebook.
 \end{frame}
 
 \section{Modifying expressions}
 \begin{frame}{Modifying expressions}
   \begin{itemize}
-  \item The grad method
+  \item The \code{grad()} method
   \item Variable nodes
   \item Types
   \item Ops
@@ -392,8 +377,7 @@ Work through the ``02\_compiling\_and\_running'' directory now
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{The grad method}
-
+\begin{frame}[fragile]{The \code{grad()} method}
 \begin{lstlisting}
 >>> x = T.scalar('x')
 >>> y = 2. * x
@@ -410,46 +394,44 @@ A. Elemwise{mul}
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}{Theano Variables}
+\begin{frame}{Theano variables}
   \begin{itemize}
-  \item A Variable is a theano expression
-  \item Can come from T.scalar, T.matrix, etc.
-  \item Can come from doing operations on other Variables
-  \item Every Variable has a type field, identifying its Type \newline
-    e.g. TensorType((True, False), ‘float32’)
+  \item A \emph{variable} is a theano expression.
+  \item Can come from \code{T.scalar()}, \code{T.matrix()}, etc.
+  \item Can come from doing operations on other variables.
+  \item Every variable has a type field, identifying its \emph{type}, such as \code{TensorType((True, False), 'float32')}
   \item Variables can be thought of as nodes in a graph
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Ops}
   \begin{itemize}
-  \item  An Op is any class that describes a
-mathematical function of some variables
+  \item  An Op is any class that describes a function operating on some variables
   \item Can call the op on some variables to get a
 new variable or variables
   \item An Op class can supply other forms of
 information about the function, such as its
-derivatives
+derivative
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Apply nodes}
   \begin{itemize}
-  \item The Apply class is a specific instance of an application of an Op
+  \item The Apply class is a specific instance of an application of an Op.
   \item Notable fields:
-    \begin{itemize}
-    \item op: The Op to be applied
-    \item inputs: The Variables to be used as input
-    \item outputs: The Variables produced
-    \end{itemize}
-  \item Variable.owner identifies the Apply that created the variable
+    \begin{description}[\texttt{outputs}]
+    \item[\texttt{op}] The Op to be applied
+    \item[\texttt{inputs}] The Variables to be used as input
+    \item[\texttt{outputs}] The Variables produced
+    \end{description}
+  \item The \code{owner} field on variables identifies the Apply that created it.
   \item Variable and Apply instances are nodes and owner/
-    inputs/outputs identify edges in a Theano graph
+    inputs/outputs identify edges in a Theano graph.
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Exercises}
-Work through the ``03\_modifying'' directory now
+Work through the "Modifying" section in the ipython notebook.
 \end{frame}
 
 \section{Debugging}
@@ -457,8 +439,8 @@ Work through the ``03\_modifying'' directory now
   \begin{itemize}
   \item DEBUG\_MODE
   \item Error message
-  \item theano.printing.debugprint
-  \item min\_informative\_str
+  \item \code{theano.printing.debugprint()}
+  \item \code{min_informative_str()}
   \item compute\_test\_value
   \item Accessing the FunctionGraph
   \end{itemize}
@@ -478,73 +460,51 @@ f(np.ones((2,)), np.ones((3,)))
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{Error message: 1st part}
-
-\begin{lstlisting}
+\begin{frame}[fragile,allowframebreaks]{Error message}
+\vspace{1em}
+\begin{lstlisting}[style=output]
 Traceback (most recent call last):
-[...]
-ValueError: Input dimension mis-match.
-    (input[0].shape[0] = 3, input[1].shape[0] = 2)
-Apply node that caused the error:
-   Elemwise{add,no_inplace}(<TensorType(float64, vector)>,
-                            <TensorType(float64, vector)>,
-                            <TensorType(float64, vector)>)
-Inputs types: [TensorType(float64, vector),
-               TensorType(float64, vector),
-               TensorType(float64, vector)]
+  File "test.py", line 9, in <module>
+    f(np.ones((2,)), np.ones((3,)))
+  File "/Users/anakha/Library/Python/2.7/site-packages/theano/compile/function_module.py", line 606, in __call__
+    storage_map=self.fn.storage_map)
+  File "/Users/anakha/Library/Python/2.7/site-packages/theano/compile/function_module.py", line 595, in __call__
+    outputs = self.fn()
+ValueError: Input dimension mis-match. (input[0].shape[0] = 3, input[1].shape[0] = 2)
+Apply node that caused the error: Elemwise{add,no_inplace}(<TensorType(float64, vector)>, <TensorType(float64, vector)>, <TensorType(float64, vector)>)
+Inputs types: [TensorType(float64, vector), TensorType(float64, vector), TensorType(float64, vector)]
 Inputs shapes: [(3,), (2,), (2,)]
 Inputs strides: [(8,), (8,), (8,)]
-Inputs scalar values: ['not scalar', 'not scalar', 'not scalar']
-\end{lstlisting}
-\end{frame}
+Inputs values: [array([ 1.,  1.,  1.]), array([ 1.,  1.]), array([ 1.,  1.])]
 
-\begin{frame}[fragile]{Error message: 2st part}
-\begin{lstlisting}
-HINT: Re-running with most Theano optimization
-disabled could give you a back-traces when this
-node was created. This can be done with by setting
-the Theano flags optimizer=fast_compile
-HINT: Use the Theano flag 'exception_verbosity=high'
-for a debugprint of this apply node.
+HINT: Re-running with most Theano optimization disabled could give you a back-trace of when this node was created. This can be done with by setting the Theano flag  'optimizer=fast_compile'. If that does not work, Theano  optimizations can be disabled with 'optimizer=None'.
+HINT: Use the Theano flag 'exception_verbosity=high'  for a debugprint and storage map footprint of this apply node.
 \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]{Error message: exception\_verbosity=high}
-\begin{lstlisting}
-Debugprint of the apply node:
-Elemwise{add,no_inplace} [@A] <TensorType(float64, vector)> ''
+\begin{lstlisting}[style=output]
+Debugprint of the apply node: 
+Elemwise{add,no_inplace} [@A] <TensorType(float64, vector)> ''   
  |<TensorType(float64, vector)> [@B] <TensorType(float64, vector)>
  |<TensorType(float64, vector)> [@C] <TensorType(float64, vector)>
  |<TensorType(float64, vector)> [@C] <TensorType(float64, vector)>
+
+Storage map footprint:
+ - <TensorType(float64, vector)>, Shape: (3,), ElemSize: 8 Byte(s), TotalSize: 24 Byte(s)
+ - <TensorType(float64, vector)>, Shape: (2,), ElemSize: 8 Byte(s), TotalSize: 16 Byte(s)
 \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]{Error message: optimizer=fast\_compile}
-\begin{lstlisting}
+\begin{lstlisting}[style=output]
 Backtrace when the node is created:
   File "test.py", line 7, in <module>
     z = z + y
-  File "/home/nouiz/src/Theano/theano/tensor/var.py", line 122, in __add__
-    return theano.tensor.basic.add(self, other)
-\end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]{Error message: Traceback}
-\begin{lstlisting}
-Traceback (most recent call last):
-  File "test.py", line 9, in <module>
-    f(np.ones((2,)), np.ones((3,)))
-  File "/u/bastienf/repos/theano/compile/function_module.py",
-       line 589, in __call__
-    self.fn.thunks[self.fn.position_of_error])
-  File "/u/bastienf/repos/theano/compile/function_module.py",
-       line 579, in __call__
-    outputs = self.fn()
 \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]{debugprint}
-
 \begin{lstlisting}
 >>> from theano.printing import debugprint
 >>> debugprint(a)
@@ -557,7 +517,6 @@ Elemwise{mul,no_inplace} [@A] ''
 \end{frame}
 
 \begin{frame}[fragile]{min\_informative\_str}
-
 \begin{lstlisting}
 >>> x = T.scalar()
 >>> y = T.scalar()
@@ -573,7 +532,6 @@ A. Elemwise{mul,no_inplace}
 \end{frame}
 
 \begin{frame}[fragile]{compute\_test\_value}
-
 \begin{lstlisting}
 >>> from theano import config
 >>> config.compute_test_value = 'raise'
@@ -590,7 +548,6 @@ ValueError: Input dimension mis-match.
 \end{frame}
 
 \begin{frame}[fragile]{Accessing a function’s fgraph}
-
 \begin{lstlisting}
 >>> x = T.scalar()
 >>> y = x / x
@@ -602,14 +559,13 @@ DeepCopyOp [@A] ''
 \end{frame}
 
 \begin{frame}{Exercises}
-Work through the ``04\_debugging'' directory now
+Work through the "Debugging" section of the ipython notebook.
 \end{frame}
 
-\section{Citing}
+\section*{}
 \begin{frame}{Citing Theano}
+Please cite both of the following papers in all work that uses Theano:
   \begin{itemize}
-  \item Please cite both of the following papers in
-all work that uses Theano:
   \item Bastien, Frédéric, Lamblin, Pascal, Pascanu, Razvan, Bergstra, James, Goodfellow, Ian, Bergeron, Arnaud, Bouchard, Nicolas, and
      Bengio,Yoshua. Theano: new features and speed improvements. Deep Learning and Unsupervised Feature Learning NIPS 2012
     Workshop, 2012.
@@ -620,11 +576,8 @@ all work that uses Theano:
 \end{frame}
 
 \begin{frame}{Example acknowledgments}
-We would like to thank the developers of
-Theano \\citep\{bergstra+al:2010-scipy,Bastien-Theano-2012\},
-Pylearn2 \\citep\{pylearn2\_arxiv\_2013\}. We would also like
-to thank NSERC, Compute Canada, and Calcul Qu\'ebec
-for providing computational resources.
+We would like to thank the developers of Theano \textbackslash citep\{bergstra+al:2010-scipy,Bastien-Theano-2012\}.
+We would also like to thank NSERC, Compute Canada, and Calcul Québec for providing computational resources.
 \end{frame}
 
 
