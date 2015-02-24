@@ -104,10 +104,6 @@ moredelim=**[is][{\color{red}}]{`}{`}
   \begin{itemize}
   \item define expression $f(x,y) = x + y$
   \item compile expression
-\lstset{language=Python,
-        commentstyle=\itshape\color{blue},
-        stringstyle=\color{violet},
-        }
 \begin{lstlisting}
 int f(int x, int y){
   return x + y;
@@ -115,10 +111,6 @@ int f(int x, int y){
 \end{lstlisting}
 
   \item execute expression
-\lstset{language=Python,
-        commentstyle=\itshape\color{blue},
-        stringstyle=\color{violet},
-        }
 \begin{lstlisting}
 >>> f(1, 2)
 3
@@ -146,10 +138,6 @@ int f(int x, int y){
   \item define expression $f(x,y) = x + y$
   \item compile expression
   \end{itemize}
-\lstset{language=Python,
-        commentstyle=\itshape\color{blue},
-        stringstyle=\color{violet},
-        }
 \begin{lstlisting}
 from theano import tensor as T
 x = T.scalar()
@@ -165,11 +153,6 @@ d = T.log(c)
 
 \begin{frame}[fragile]
   \frametitle{Vector math}
-
-\lstset{language=Python,
-        commentstyle=\itshape\color{blue},
-        stringstyle=\color{violet},
-        }
 \begin{lstlisting}
 from theano import tensor as T
 x = T.vector()
@@ -185,11 +168,6 @@ c = a + b
 
 \begin{frame}[fragile]
   \frametitle{Matrix math}
-
-\lstset{language=Python,
-        commentstyle=\itshape\color{blue},
-        stringstyle=\color{violet},
-        }
 \begin{lstlisting}
 from theano import tensor as T
 x = T.matrix()
@@ -216,10 +194,6 @@ c = T.dot(x, a)
       make size match
     \end{itemize}
   \end{itemize}
-\lstset{language=Python,
-        commentstyle=\itshape\color{blue},
-        stringstyle=\color{violet},
-        }
 \begin{lstlisting}
 from theano import tensor as T
 tensor3 = T.TensorType(
@@ -236,10 +210,6 @@ x = tensor3()
   \item define expression $f(x,y) = x + y$
   \item compile expression
   \end{itemize}
-\lstset{language=Python,
-        commentstyle=\itshape\color{blue},
-        stringstyle=\color{violet},
-        }
 \begin{lstlisting}
 from theano import tensor as T
 tensor3 = T.TensorType(
@@ -255,10 +225,6 @@ mx = x.max(axis=1)
 \begin{frame}[fragile]
   \frametitle{Dimshuffle}
 
-\lstset{language=Python,
-        commentstyle=\itshape\color{blue},
-        stringstyle=\color{violet},
-        }
 \begin{lstlisting}
 from theano import tensor as T
 tensor3 = T.TensorType(broadcastable=(False, False, False), dtype=''float32'')
@@ -293,10 +259,6 @@ e = a + d
 \begin{frame}[fragile]
   \frametitle{theano.function}
 
-\lstset{language=Python,
-        commentstyle=\itshape\color{blue},
-        stringstyle=\color{violet},
-        }
 \begin{lstlisting}
 >>> from theano import tensor as T
 >>> x = T.scalar()
@@ -325,10 +287,6 @@ array(3.0)
 \begin{frame}[fragile]
   \frametitle{Shared variable example}
 
-\lstset{language=Python,
-        commentstyle=\itshape\color{blue},
-        stringstyle=\color{violet},
-        }
 \begin{lstlisting}
 >>> from theano import shared
 >>> x = shared(0.)
@@ -420,10 +378,6 @@ modes regard as fine.
     checking and produce incorrect output
     rather than an exception
   \end{itemize}
-\lstset{language=Python,
-        commentstyle=\itshape\color{blue},
-        stringstyle=\color{violet},
-        }
 \begin{lstlisting}
 >>> x = T.scalar()
 >>> f = function([x], x/x)
@@ -451,10 +405,6 @@ Work through the ``02\_compiling\_and\_running'' directory now
 \begin{frame}[fragile]
   \frametitle{The grad method}
 
-\lstset{language=Python,
-        commentstyle=\itshape\color{blue},
-        stringstyle=\color{violet},
-        }
 \begin{lstlisting}
 >>> x = T.scalar('x')
 >>> y = 2. * x
@@ -528,10 +478,6 @@ Work through the ``03\_modifying'' directory now
 
 \begin{frame}[fragile]
   \frametitle{Error message: code}
-\lstset{language=Python,
-        commentstyle=\itshape\color{blue},
-        stringstyle=\color{violet},
-        }
 \begin{lstlisting}
 import numpy as np
 import theano
@@ -548,10 +494,6 @@ f(np.ones((2,)), np.ones((3,)))
 \begin{frame}[fragile]
   \frametitle{Error message: 1st part}
 
-\lstset{language=Python,
-        commentstyle=\itshape\color{blue},
-        stringstyle=\color{violet},
-        }
 \begin{lstlisting}
 Traceback (most recent call last):
 [...]
@@ -573,10 +515,6 @@ Inputs scalar values: ['not scalar', 'not scalar', 'not scalar']
 \begin{frame}[fragile]
   \frametitle{Error message: 2st part}
 
-\lstset{language=Python,
-        commentstyle=\itshape\color{blue},
-        stringstyle=\color{violet},
-        }
 \begin{lstlisting}
 HINT: Re-running with most Theano optimization
 disabled could give you a back-traces when this
@@ -590,10 +528,6 @@ for a debugprint of this apply node.
 \begin{frame}[fragile]
   \frametitle{Error message: exception\_verbosity=high}
 
-\lstset{language=Python,
-        commentstyle=\itshape\color{blue},
-        stringstyle=\color{violet},
-        }
 \begin{lstlisting}
 Debugprint of the apply node:
 Elemwise{add,no_inplace} [@A] <TensorType(float64, vector)> ''
@@ -607,10 +541,6 @@ Elemwise{add,no_inplace} [@A] <TensorType(float64, vector)> ''
 \begin{frame}[fragile]
   \frametitle{Error message: optimizer=fast\_compile}
 
-\lstset{language=Python,
-        commentstyle=\itshape\color{blue},
-        stringstyle=\color{violet},
-        }
 \begin{lstlisting}
 Backtrace when the node is created:
   File "test.py", line 7, in <module>
@@ -624,10 +554,6 @@ Backtrace when the node is created:
 \begin{frame}[fragile]
   \frametitle{Error message: Traceback}
 
-\lstset{language=Python,
-        commentstyle=\itshape\color{blue},
-        stringstyle=\color{violet},
-        }
 \begin{lstlisting}
 Traceback (most recent call last):
   File "test.py", line 9, in <module>
@@ -645,10 +571,6 @@ Traceback (most recent call last):
 \begin{frame}[fragile]
   \frametitle{debugprint}
 
-\lstset{language=Python,
-        commentstyle=\itshape\color{blue},
-        stringstyle=\color{violet},
-        }
 \begin{lstlisting}
 >>> from theano.printing import debugprint
 >>> debugprint(a)
@@ -663,10 +585,6 @@ Elemwise{mul,no_inplace} [@A] ''
 \begin{frame}[fragile]
   \frametitle{min\_informative\_str}
 
-\lstset{language=Python,
-        commentstyle=\itshape\color{blue},
-        stringstyle=\color{violet},
-        }
 \begin{lstlisting}
 >>> x = T.scalar()
 >>> y = T.scalar()
@@ -684,10 +602,6 @@ A. Elemwise{mul,no_inplace}
 \begin{frame}[fragile]
   \frametitle{compute\_test\_value}
 
-\lstset{language=Python,
-        commentstyle=\itshape\color{blue},
-        stringstyle=\color{violet},
-        }
 \begin{lstlisting}
 >>> from theano import config
 >>> config.compute_test_value = 'raise'
@@ -706,10 +620,6 @@ ValueError: Input dimension mis-match.
 \begin{frame}[fragile]
   \frametitle{Accessing a function’s fgraph}
 
-\lstset{language=Python,
-        commentstyle=\itshape\color{blue},
-        stringstyle=\color{violet},
-        }
 \begin{lstlisting}
 >>> x = T.scalar()
 >>> y = x / x
