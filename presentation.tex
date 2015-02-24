@@ -1,36 +1,67 @@
-\documentclass[utf8x,xcolor=pdftex,dvipsnames,table]{beamer}
-\usetheme{Malmoe}  % Now it's a beamer presentation with the lisa theme!
-\setbeamertemplate{footline}[page number]
-\usecolortheme{beaver}
-\usepackage[T1]{fontenc}
-\usepackage{amsmath}
+\documentclass[utf8x]{beamer}
+
 \usepackage[utf8x]{inputenc}
-%\logo{\includegraphics[width=.8in]{UdeM_NoirBleu_logo_Marie_crop}}
+\usepackage[OT1]{fontenc}
+\usepackage{graphicx}
+\usepackage{amsmath}
 \usepackage{listings}
+\usepackage{hyperref}
+\usepackage{xcolor}
+%\logo{\includegraphics[width=.8in]{UdeM_NoirBleu_logo_Marie_crop}}
+
+
+\usetheme{Malmoe}  % Now it's a beamer presentation with the lisa theme!
+\usecolortheme{beaver}
+\setbeamertemplate{footline}[page number]
+\setbeamertemplate{navigation symbols}{}
+
+\lstloadlanguages{Python,C,sh}
+
+\definecolor{darkgreen}{RGB}{0,93,21}
+\definecolor{greenblue}{RGB}{40,110,126}
+\definecolor{lightgray}{RGB}{246,246,246}
+\definecolor{bordergray}{RGB}{193,193,193}
+\definecolor{lightblue}{RGB}{0,114,168}
+\definecolor{methblue}{RGB}{0,31,108}
 
 \newcommand{\superscript}[1]{\ensuremath{^{\textrm{#1}}}}
 
 \mode<presentation>
 
 \title{Introduction to Theano}
-
 \author{%
 \footnotesize
-Frédéric Bastien \newline
-(slides highly copied from previous tutorial by Ian G.) \newline
+Arnaud Bergeron \newline
+(slides adapted by Frédéric Bastien from slides by Ian G.) \newline
+(further adapted by Arnaud Bergeron)
+}
+\date{February 26, 2015}
+
+\lstset{
+language=Python,
+basicstyle=\fontfamily{pcr}\selectfont\footnotesize,
+keywordstyle=\color{darkgreen}\bfseries,
+commentstyle=\color{greenblue}\itshape,
+%commentstyle=\color{blue}\itshape,
+stringstyle=\color{violet},
+showstringspaces=false,
+tabsize=4,
+backgroundcolor=\color{lightgray},
+frame=single,
+emph={[2]__init__,make_node,perform,infer_shape,c_code,make_thunk,grad,R_op},emphstyle={[2]\color{methblue}},
+emph={[3]self},emphstyle={[3]\color{darkgreen}},
+moredelim=**[is][{\color{red}}]{`}{`}
 }
 
-\date{September 25, 2014}
-
-\setbeamertemplate{navigation symbols}{}
+\newcommand{\code}[1]{\lstinline[emph={[2]}]|#1|}
 
 \begin{document}
 
 \begin{frame}[plain]
  \titlepage
- \vspace{-5em}
+% \vspace{-5em}
 % \includegraphics[width=1in]{../hpcs2011_tutorial/pics/lisabook_logo_text_3.png}
- \hfill
+% \hfill
 % \includegraphics[width=.8in]{../hpcs2011_tutorial/pics/UdeM_NoirBleu_logo_Marie_crop}
 \end{frame}
 
