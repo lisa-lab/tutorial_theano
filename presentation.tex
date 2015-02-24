@@ -98,8 +98,7 @@ moredelim=**[is][{\color{red}}]{`}{`}
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Overview}
+\begin{frame}[fragile]{Overview}
   Using Theano:
   \begin{itemize}
   \item define expression $f(x,y) = x + y$
@@ -131,8 +130,7 @@ int f(int x, int y){
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Scalar math}
+\begin{frame}[fragile]{Scalar math}
   Using Theano:
   \begin{itemize}
   \item define expression $f(x,y) = x + y$
@@ -151,8 +149,7 @@ d = T.log(c)
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Vector math}
+\begin{frame}[fragile]{Vector math}
 \begin{lstlisting}
 from theano import tensor as T
 x = T.vector()
@@ -166,8 +163,7 @@ c = a + b
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Matrix math}
+\begin{frame}[fragile]{Matrix math}
 \begin{lstlisting}
 from theano import tensor as T
 x = T.matrix()
@@ -180,8 +176,7 @@ c = T.dot(x, a)
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Tensors}
+\begin{frame}[fragile]{Tensors}
   Using Theano:
   \begin{itemize}
   \item define expression $f(x,y) = x + y$
@@ -203,8 +198,7 @@ x = tensor3()
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Reductions}
+\begin{frame}[fragile]{Reductions}
   Using Theano:
   \begin{itemize}
   \item define expression $f(x,y) = x + y$
@@ -222,8 +216,7 @@ mx = x.max(axis=1)
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Dimshuffle}
+\begin{frame}[fragile]{Dimshuffle}
 
 \begin{lstlisting}
 from theano import tensor as T
@@ -256,8 +249,7 @@ e = a + d
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{theano.function}
+\begin{frame}[fragile]{theano.function}
 
 \begin{lstlisting}
 >>> from theano import tensor as T
@@ -284,8 +276,7 @@ array(3.0)
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Shared variable example}
+\begin{frame}[fragile]{Shared variable example}
 
 \begin{lstlisting}
 >>> from theano import shared
@@ -370,8 +361,7 @@ modes regard as fine.
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Optimizations}
+\begin{frame}[fragile]{Optimizations}
 
   \begin{itemize}
   \item Sometimes optimizations discard error
@@ -402,8 +392,7 @@ Work through the ``02\_compiling\_and\_running'' directory now
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{The grad method}
+\begin{frame}[fragile]{The grad method}
 
 \begin{lstlisting}
 >>> x = T.scalar('x')
@@ -433,7 +422,6 @@ A. Elemwise{mul}
 \end{frame}
 
 \begin{frame}{Ops}
-
   \begin{itemize}
   \item  An Op is any class that describes a
 mathematical function of some variables
@@ -476,8 +464,7 @@ Work through the ``03\_modifying'' directory now
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Error message: code}
+\begin{frame}[fragile]{Error message: code}
 \begin{lstlisting}
 import numpy as np
 import theano
@@ -491,8 +478,7 @@ f(np.ones((2,)), np.ones((3,)))
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Error message: 1st part}
+\begin{frame}[fragile]{Error message: 1st part}
 
 \begin{lstlisting}
 Traceback (most recent call last):
@@ -512,9 +498,7 @@ Inputs scalar values: ['not scalar', 'not scalar', 'not scalar']
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Error message: 2st part}
-
+\begin{frame}[fragile]{Error message: 2st part}
 \begin{lstlisting}
 HINT: Re-running with most Theano optimization
 disabled could give you a back-traces when this
@@ -525,35 +509,27 @@ for a debugprint of this apply node.
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Error message: exception\_verbosity=high}
-
+\begin{frame}[fragile]{Error message: exception\_verbosity=high}
 \begin{lstlisting}
 Debugprint of the apply node:
 Elemwise{add,no_inplace} [@A] <TensorType(float64, vector)> ''
  |<TensorType(float64, vector)> [@B] <TensorType(float64, vector)>
  |<TensorType(float64, vector)> [@C] <TensorType(float64, vector)>
  |<TensorType(float64, vector)> [@C] <TensorType(float64, vector)>
-
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Error message: optimizer=fast\_compile}
-
+\begin{frame}[fragile]{Error message: optimizer=fast\_compile}
 \begin{lstlisting}
 Backtrace when the node is created:
   File "test.py", line 7, in <module>
     z = z + y
   File "/home/nouiz/src/Theano/theano/tensor/var.py", line 122, in __add__
     return theano.tensor.basic.add(self, other)
-
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Error message: Traceback}
-
+\begin{frame}[fragile]{Error message: Traceback}
 \begin{lstlisting}
 Traceback (most recent call last):
   File "test.py", line 9, in <module>
@@ -564,12 +540,10 @@ Traceback (most recent call last):
   File "/u/bastienf/repos/theano/compile/function_module.py",
        line 579, in __call__
     outputs = self.fn()
-
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{debugprint}
+\begin{frame}[fragile]{debugprint}
 
 \begin{lstlisting}
 >>> from theano.printing import debugprint
@@ -582,8 +556,7 @@ Elemwise{mul,no_inplace} [@A] ''
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{min\_informative\_str}
+\begin{frame}[fragile]{min\_informative\_str}
 
 \begin{lstlisting}
 >>> x = T.scalar()
@@ -599,8 +572,7 @@ A. Elemwise{mul,no_inplace}
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{compute\_test\_value}
+\begin{frame}[fragile]{compute\_test\_value}
 
 \begin{lstlisting}
 >>> from theano import config
@@ -617,8 +589,7 @@ ValueError: Input dimension mis-match.
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Accessing a function’s fgraph}
+\begin{frame}[fragile]{Accessing a function’s fgraph}
 
 \begin{lstlisting}
 >>> x = T.scalar()
