@@ -10,12 +10,12 @@ Basic tutorial
 
 This tutorial covers:
 
-    Overview of library (3 min)
-    Building expressions (30 min)
-    Compiling and running expressions (30 min)
-    Modifying expressions (25 min)
-    Debugging (30 min)
-    Citing Theano (2 min)
+ * Overview of library (3 min)
+ * Building expressions (30 min)
+ * Compiling and running expressions (30 min)
+ * Modifying expressions (25 min)
+ * Debugging (30 min)
+ * Citing Theano (2 min)
 
 In order to follow this tutorial you will need the ipython-notebook
 python package on your computer and a clone of this repo to get the
