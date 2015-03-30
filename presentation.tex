@@ -334,6 +334,7 @@ Raises error messages in situations other modes don't check for.
   \item \code{T.scalar}, \code{T.vector}, \code{T.matrix} resolve to 32 or 64 bit depending on theano’s floatX flag
   \item floatX is float64 by default, set it to float32
   \item Set the device flag to gpu (or a specific gpu, like gpu0)
+  \item Optional: warn\_float64=\{'ignore', 'warn', 'raise', 'pdb'\}
   \end{itemize}
 \end{frame}
 
@@ -383,6 +384,7 @@ Work through the "Compiling and Running" section of the ipython notebook.
 >>> y = 2. * x
 >>> g = T.grad(y, x)
 >>> from theano.printing import min_informative_str
+# Print the not optimized graph
 >>> print min_informative_str(g)
 A. Elemwise{mul}
  B. Elemwise{second,no_inplace}
@@ -391,6 +393,20 @@ A. Elemwise{mul}
    E. x
   F. TensorConstant{1.0}
  <D>
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{The \code{grad()} method}
+\begin{lstlisting}
+>>> x = T.scalar('x')
+>>> y = 2. * x
+>>> g = T.grad(y, x)
+>>> from theano.printing import min_informative_str
+# Print the optimized graph
+>>> f = theano.function([x], g)
+>>> theano.printing.debugprint(f)
+DeepCopyOp [@A] ''   0
+ |TensorConstant{2.0} [@B]
 \end{lstlisting}
 \end{frame}
 
