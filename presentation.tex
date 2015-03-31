@@ -384,7 +384,7 @@ Work through the "Compiling and Running" section of the ipython notebook.
 >>> y = 2. * x
 >>> g = T.grad(y, x)
 >>> from theano.printing import min_informative_str
-# Print the not optimized graph
+# Print the unoptimized graph
 >>> print min_informative_str(g)
 A. Elemwise{mul}
  B. Elemwise{second,no_inplace}
