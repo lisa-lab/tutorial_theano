@@ -7,6 +7,8 @@
 \usepackage{listings}
 \usepackage{hyperref}
 \usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{shapes.arrows}
 %\logo{\includegraphics[width=.8in]{UdeM_NoirBleu_logo_Marie_crop}}
 
 
@@ -138,6 +140,7 @@ emph={[3]},
   \item Vectors
   \item Matrices
   \item Tensors
+  \item Broadcasting
   \item Reduction
   \item Dimshuffle
   \end{itemize}
@@ -199,6 +202,45 @@ tensor3 = T.TensorType(
     dtype='float32')
 x = tensor3()
 \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Broadcasting}
+\begin{tabular}{lcccccccl}
+    &
+    \begin{tabular}{cc}
+        1 & 2 \\
+        3 & 4 \\
+        5 & 6 \\
+    \end{tabular} &
+    + &
+    \begin{tabular}{cc}
+        1 & 2 \\
+    \end{tabular} &
+    = &
+    \begin{tabular}{cc}
+        1 & 2 \\
+        3 & 4 \\
+        5 & 6 \\
+    \end{tabular} &
+    + &
+    \begin{tabular}{cc}
+        1 & 2 \\
+        \color{blue} 1 & \color{blue} 2 \\
+        \color{blue} 1 & \color{blue} 2 \\
+    \end{tabular} &
+    \hspace{-1.3em}
+    \tikz[baseline={([yshift=-.5ex]current bounding box.center)}]{
+        \draw [->, very thick] (0,0) -- (0,-1.2);
+    } \\[1.5em]
+    shape: & (3, 2) & & (2,) & & (3, 2) & & ({\color{blue}3}, 2) &
+\end{tabular}
+\vfill
+\begin{itemize}
+    \item Pad shape with 1s on the left : $(2,) \equiv (1,2)$
+    \item Two dimensions are compatible when they have the same length or one of them is broadcastable
+    \item broadcastable dimensions must have a length of 1
+    \item Adding tensors of shape (8, 1, 6, 1) and (7, 1, 5) gives a tensor of shape (8, 7, 6, 5)
+\end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Reductions}
