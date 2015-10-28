@@ -6,7 +6,7 @@ class DoubleCOp(COp):
     __props__ = ()
 
     def __init__(self):
-        COp.__init__(self, "./doublecop.c",
+        COp.__init__(self, ["doublecop.c"],
                      "APPLY_SPECIFIC(doublecop)")
 
     def make_node(self, x):

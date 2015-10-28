@@ -302,15 +302,15 @@ This is the C code equivalent to \code{perform}
 
 \begin{frame}{Constructor Arguments}
 \begin{itemize}
-\item Basically you just pass two arguments to the constructor of COp
+\item Basically you just pass arguments to the constructor of COp
 \begin{itemize}
 \item Either by calling the constructor directly \code{COp.__init__(self, ...)}
 \item Or via the superclass \code{super(MyOp, self).__init__(...)}
 \end{itemize}
-\item The two arguments are:
+\item The arguments are:
 \begin{itemize}
-\item the name of the C code file
-\item the name of the function to call to make the computation
+\item a list of file names with code sections (relative to the location of the op class)
+\item the name of a function to call to make the computation (optional)
 \end{itemize}
 \end{itemize}
 \end{frame}
