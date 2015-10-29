@@ -1,6 +1,6 @@
 from theano import Op, Apply
 from theano.tensor import as_tensor_variable
-from theano.scalar import as_scalar_variable
+from theano.scalar import as_scalar
 
 class ScalMulV1(Op):
     __props__ = ('scal',)
@@ -25,7 +25,7 @@ class ScalMulV2(Op):
 
     def make_node(self, x, scal):
         x = as_tensor_variable(x)
-        scal = as_scalar_variable(scal)
+        scal = as_scalar(scal)
         return Apply(self, [x, scal], [x.type()])
 
     def perform(self, node, inputs, output_storage):
