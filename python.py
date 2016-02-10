@@ -12,7 +12,7 @@ class MyOp(Op):
     def perform(self, node, inputs, outputs_storage):
         # do the computation
 
-    def infer_shape(self, input_shapes):
+    def infer_shape(self, node, input_shapes):
         # return output shapes
 
     def grad(self, inputs, output_grads):
