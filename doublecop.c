@@ -1,4 +1,4 @@
-THEANO_APPLY_CODE_SECTION
+#section support_code
 
 int APPLY_SPECIFIC(doublecop)(PyArrayObject *x,
                               PyArrayObject **out) {
