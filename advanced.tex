@@ -88,9 +88,6 @@ moredelim=**[is][{\color{red}}]{`}{`}
 \item Empty tuple signifies no properties that should take part in comparison
 \item If you have only one property, make sure you add a final comma: \code{('property',)}
 \end{itemize}
-\begin{alertblock}{}
-Make sure \code{__hash__}, \code{__eq__} and \code{__str__} are not defined in a superclass if you don't inherit directly from Op since otherwise your methods will get shadowed.
-\end{alertblock}
 \end{frame}
 
 \begin{frame}{\code{make_node}}
