@@ -16,7 +16,7 @@ class DoubleOp(Op):
     def infer_shape(self, node, input_shapes):
         return input_shapes
 
-    def grad(self, inputs, output_grads):
+    def L_op(self, inputs, outputs, output_grads):
         return [output_grads[0] * 2]
 
     def R_op(self, inputs, eval_points):
