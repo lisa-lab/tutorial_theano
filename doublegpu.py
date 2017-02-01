@@ -22,7 +22,7 @@ class DoubleGpu(Op, GpuKernelBase):
     def gpu_kernels(self, node, name):
         dt = node.inputs[0].type
         code = """
-KERNEL void double(GLOBAL_MEM %(ctype) *out,
+KERNEL void doublek(GLOBAL_MEM %(ctype) *out,
                    GLOBAL_MEM const %(ctype)s *a,
                    ga_size n) {
   for (ga_size i = LID_0; i < n; i += LDIM_0) {
@@ -30,7 +30,7 @@ KERNEL void double(GLOBAL_MEM %(ctype) *out,
   }
 }
 """ % dict(ctype=gpuarray.dtype_to_ctype(dt))
-        return [Kernel(code=code, name="double",
+        return [Kernel(code=code, name="doublek",
                        params=[gpuarray.GpuArray,
                                gpuarray.GpuArray,
                                gpuarray.SIZE],
@@ -46,7 +46,7 @@ Py_XDECREF(%(out)s);
 if (%(out)s == NULL) %(fail)s
 for (unsigned int i = 0; i < %(inp)s->ga.nd; i++)
   n *= PyGpuArray_DIM(%(inp)s, i);
-if (double_scall(1, &n, 0, %(out)s, %(inp)s, n)) {
+if (doublek_scall(1, &n, 0, %(out)s, %(inp)s, n)) {
   PyErr_SetString(PyExc_RuntimeError,
                   "Error calling kernel");
   %(fail)s;

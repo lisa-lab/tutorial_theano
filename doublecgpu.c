@@ -1,16 +1,16 @@
 #section kernels
-#kernel double : *, *, size :
+#kernel doublek : *, *, size :
 
-KERNEL void double(GLOBAL_MEM DTYPE_o0 *out,
-                   GLOBAL_MEM DTYPE_i1 *a,
-                   ga_size n) {
+KERNEL void doublek(GLOBAL_MEM DTYPE_o0 *out,
+                    GLOBAL_MEM DTYPE_i0 *a,
+                    ga_size n) {
   for (ga_size i = LID_0; i < n; i += LDIM_0) {
     out[i] = 2 * a[i];
   }
 }
 
 #section support_code_struct
-int double_fn(PyGpuArrayObject *inp, npy_int64 n,
+int double_fn(PyGpuArrayObject *inp,
               PyGpuArrayObject **out,
               PyGpuContextObject *ctx) {
   size_t n = 1;
@@ -21,7 +21,7 @@ int double_fn(PyGpuArrayObject *inp, npy_int64 n,
   if (*out == NULL) return -1;
   for (unsigned int i = 0; i < inp->ga.nd; i++)
     n *= PyGpuArray_DIM(inp, i);
-  if (double_scall(1, &n, 0, *out, inp, n)) {
+  if (doublek_scall(1, &n, 0, *out, inp, n)) {
     PyErr_SetString(PyExc_RuntimeError,
                     "Error calling kernel");
     return -1;
