@@ -3,7 +3,7 @@ from theano.gpuarray.basic_ops import (as_gpuarray_variable,
                                        infer_context_name, CGpuKernelBase)
 
 
-class DoubleGpu(CGpuKernelBase):
+class DoubleCGpu(CGpuKernelBase):
     __props__ = ()
 
     def __init__(self):
