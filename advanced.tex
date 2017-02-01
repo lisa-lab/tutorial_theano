@@ -371,22 +371,44 @@ Work through the "08\_scalmulc" directory available at \url{https://github.com/a
 \lstinputlisting{params.py}
 \end{frame}
 
-%\section{How to Make a Complex Op}
+\section{GPU Ops}
 
-%\begin{frame}[plain]{}
-%\begin{center}
-%\Huge How to Make a Complex Op
-%\end{center}
-%\end{frame}
+\begin{frame}[plain]{}
+\begin{center}
+\Huge GPU Ops
+\end{center}
+\end{frame}
 
-%\begin{frame}{\code{make_thunk}}
-%\lstinputlisting[linerange={12-14}]{thunk.py}
-%\begin{itemize}
-%\item Define instead of \code{perform} or \code{c_code}
-%\item Gives total freedom on how the computation is performed
-%\item More complex to use and generally not needed
-%\end{itemize}
-%\end{frame}
+\begin{frame}{Overview}
+\only<1>{\lstinputlisting[linerange=1-12]{gpu.py}}
+\only<2>{\lstinputlisting[linerange=14-20]{gpu.py}
+\begin{itemize}
+\item \texttt{params\_type} is new.
+\item \texttt{get\_params} is new.
+\end{itemize}}
+\end{frame}
+
+\begin{frame}{Context and Context Name}
+\begin{itemize}
+\item Context is what is used to refer to the chosen GPU.
+
+It is a C object that can't be serialized.
+\item Context Name is a name internal to Theano to refer to a given context object.  It is a python string.
+\item Context Names are used whenever you need a symbolic object.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Double on GPU}
+\only<1>{\lstinputlisting[linerange=5-21]{doublegpu.py}}
+\only<2>{\lstinputlisting[linerange=22-37]{doublegpu.py}}
+\only<3>{\lstinputlisting[linerange=39-55]{doublegpu.py}}
+\end{frame}
+
+\begin{frame}{GpuKernelBase}
+\only<1>{\lstinputlisting[linerange=6-20]{doublecgpu.py}}
+\only<2>{\lstinputlisting[linerange=1-10]{doublecgpu.c}}
+\only<3>{\lstinputlisting[linerange=12-28]{doublecgpu.c}}
+\end{frame}
 
 \section{Optimizations}
 
