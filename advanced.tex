@@ -1,6 +1,5 @@
 \documentclass[utf8x]{beamer}
 
-% \usepackage{beamerthemesplit} // Activate for custom appearance
 \usepackage[utf8x]{inputenc}
 \usepackage[OT1]{fontenc}
 \usepackage{graphicx}
@@ -35,8 +34,6 @@ showstringspaces=false,
 tabsize=4,
 backgroundcolor=\color{lightgray},
 frame=single,
-%showlines=true,
-%emph={theano,MyOp,DoubleOp}, emphstyle=\color{lightblue}\bfseries,
 emph={[2]__init__,make_node,perform,infer_shape,c_code,make_thunk,grad,R_op},emphstyle={[2]\color{methblue}},
 emph={[3]self},emphstyle={[3]\color{darkgreen}},
 moredelim=**[is][{\color{red}}]{`}{`}
@@ -54,7 +51,7 @@ moredelim=**[is][{\color{red}}]{`}{`}
 \begin{enumerate}
 \item How to Make an Op (Python) (45 min)
 \item How to Make an Op (C) (30 min)
-\item How to Make a Complex Op (10 min)
+\item Op Params (10 min)
 \item Optimizations (20 min)
 \end{enumerate}
 \end{frame}
@@ -150,28 +147,6 @@ OK
 \end{lstlisting}
 
 You can also use \texttt{theano-nose} which is a wrapper around \texttt{nosetests} with some extra options.
-
-\end{frame}
-
-\begin{frame}{Exercise: TripleOp}
-What would need to be changed in the code below (DoubleOp) to make this Op triple the input instead of double?
-\lstinputlisting[lastline=15]{doubleop.py}
-\end{frame}
-
-\begin{frame}{Solution: TripleOp}
-You change the class name and the constant \code{2} for a constant \code{3}. \\
-\ 
-\lstinputlisting[lastline=15]{tripleop.py}
-\end{frame}
-
-\begin{frame}{Exercise: ScalMulOp}
-\begin{center}
-Work though the "06\_scalmulop" directory available at \url{https://github.com/abergeron/ccw_tutorial_theano.git}.
-\end{center}
-\begin{itemize}
-\item Take the \code{DoubleOp} code and make it work with an arbitrary scalar
-\item There are more than one solution possible, both have advantages and disadvantages
-\end{itemize}
 \end{frame}
 
 \begin{frame}{\code{infer_shape}}
@@ -217,15 +192,7 @@ Work though the "06\_scalmulop" directory available at \url{https://github.com/a
 \begin{frame}{Tests}
 To test the gradient we use \code{verify_grad}
 \lstinputlisting[linerange={5-5,36-44}]{test_doubleop.py}
-It will compute the gradient numerically and symbolically (using our \code{grad()} method) and compare the two.
-\end{frame}
-
-\begin{frame}{Exercice: Add Special Methods to ScalMulOp}
-Work through the "07\_scalmulgrad" directory available at \url{https://github.com/abergeron/ccw_tutorial_theano.git}
-\begin{itemize}
-\item Take the ScalMulOp class you made and add the \code{infer_shape} and \code{grad} methods to it.
-\item Don't forget to make tests for your new class to make sure everything works correctly.
-\end{itemize}
+It will compute the gradient numerically and symbolically (using our \code{L_op()} method) and compare the two.
 \end{frame}
 
 \section{How to Make an Op (C)}
@@ -302,15 +269,15 @@ This is the C code equivalent to \code{perform}
 
 \begin{frame}{Constructor Arguments}
 \begin{itemize}
-\item Basically you just pass two arguments to the constructor of COp
+\item Basically you just pass arguments to the constructor of COp
 \begin{itemize}
 \item Either by calling the constructor directly \code{COp.__init__(self, ...)}
 \item Or via the superclass \code{super(MyOp, self).__init__(...)}
 \end{itemize}
-\item The two arguments are:
+\item The arguments are:
 \begin{itemize}
-\item the name of the C code file
-\item the name of the function to call to make the computation
+\item a list of file names with code sections (relative to the location of the op class)
+\item the name of a function to call to make the computation (optional)
 \end{itemize}
 \end{itemize}
 \end{frame}
@@ -342,30 +309,63 @@ This is the C code equivalent to \code{perform}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Exercice: Add C Code to ScalMulOp}
-Work through the "08\_scalmulc" directory available at \url{https://github.com/abergeron/ccw_tutorial_theano.git}.
-\begin{itemize}
-\item Take the ScalMulOp from before and write C code for it using either approach (only accept vectors).
-\item You can base yourself on the C code for DoubleOp.
-\item Don't forget to test your new implementation! Be sure to check for invalid inputs (matrices).
-\end{itemize}
-\end{frame}
-
-\section{How to Make a Complex Op}
+\section{Op Params}
 
 \begin{frame}[plain]{}
 \begin{center}
-\Huge How to Make a Complex Op
+\Huge Op Params
 \end{center}
 \end{frame}
 
-\begin{frame}{\code{make_thunk}}
-\lstinputlisting[linerange={12-14}]{thunk.py}
+\begin{frame}{Purpose}
 \begin{itemize}
-\item Define instead of \code{perform} or \code{c_code}
-\item Gives total freedom on how the computation is performed
-\item More complex to use and generally not needed
+\item Used to pass information to the C code
+\item Can reduce the amount of compiled C code
+\item Required for things that can change from one script run to the other.
 \end{itemize}
+\end{frame}
+
+\begin{frame}{Usage}
+\lstinputlisting{params.py}
+\end{frame}
+
+\section{GPU Ops}
+
+\begin{frame}[plain]{}
+\begin{center}
+\Huge GPU Ops
+\end{center}
+\end{frame}
+
+\begin{frame}{Overview}
+\only<1>{\lstinputlisting[linerange=1-12]{gpu.py}}
+\only<2>{\lstinputlisting[linerange=14-20]{gpu.py}
+\begin{itemize}
+\item \texttt{params\_type} is new.
+\item \texttt{get\_params} is new.
+\end{itemize}}
+\end{frame}
+
+\begin{frame}{Context and Context Name}
+\begin{itemize}
+\item Context is what is used to refer to the chosen GPU.
+
+It is a C object that can't be serialized.
+\item Context Name is a name internal to Theano to refer to a given context object.  It is a python string.
+\item Context Names are used whenever you need a symbolic object.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Double on GPU}
+\only<1>{\lstinputlisting[linerange=5-21]{doublegpu.py}}
+\only<2>{\lstinputlisting[linerange=22-37]{doublegpu.py}}
+\only<3>{\lstinputlisting[linerange=39-55]{doublegpu.py}}
+\end{frame}
+
+\begin{frame}{GpuKernelBase}
+\only<1>{\lstinputlisting[linerange=6-20]{doublecgpu.py}}
+\only<2>{\lstinputlisting[linerange=1-10]{doublecgpu.c}}
+\only<3>{\lstinputlisting[linerange=12-28]{doublecgpu.c}}
 \end{frame}
 
 \section{Optimizations}
@@ -384,32 +384,28 @@ Work through the "08\_scalmulc" directory available at \url{https://github.com/a
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Replace an Op (V1)}
+\begin{frame}{Replace an Op}
 Here is code to use \code{DoubleOp()} instead of \code{ScalMul(2)}.
-\lstinputlisting[linerange={1-5,9-15}]{opt.py}
+\lstinputlisting[linerange={1-2,7-8,11-20}]{opt.py}
 \end{frame}
 
-\begin{frame}{Replace an Op (V2)}
-In this case since we are replacing one instance with another there is an easier way.
-\lstinputlisting[linerange={1-2,16-20}]{opt.py}
-\end{frame}
-
-\begin{frame}{Registering}
-In any case you need to register your optimization.
-\lstinputlisting[linerange={6-10}]{opt.py}
-\lstinputlisting[linerange={21-22}]{opt.py}
+\begin{frame}{Replace an Op for GPU}
+Here is code to move the Double op to GPU.
+\lstinputlisting[linerange={1-5,9-10,22-30}]{opt.py}
 \end{frame}
 
 \begin{frame}{Tests}
 \lstinputlisting{test_opt.py}
 \end{frame}
 
-\begin{frame}{Exercice 4}
-Work through the "09\_opt" directory available at \url{https://github.com/abergeron/ccw_tutorial_theano.git}.
+\begin{frame}{Exercice}
 \begin{itemize}
-\item Make an optimization that replace DoubleOp with DoubleC (or DoubleCOp)
-\item Write tests to make sure your optimization is applied correctly
+\item Implement a ScalMulOp that multiplies its input by an arbitrary scalar value.  Start with a python implementation
+\item Add C code to your implementation
+\item Create a GPU version of your op.
+\item Create an optimization that replace the CPU version with a GPU version when appropriate.
 \end{itemize}
+Clone the repo at \url{https://github.com/abergeron/ccw_tutorial_theano.git}.
 \end{frame}
 
 \end{document}
